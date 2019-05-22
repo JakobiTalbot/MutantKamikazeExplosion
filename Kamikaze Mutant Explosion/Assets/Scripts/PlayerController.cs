@@ -57,14 +57,14 @@ public class PlayerController : MonoBehaviour
         // rotate camera if bool enabled
         if (true)
         {
-            
             m_v3AddedRotation.x -= (m_crosshair.transform.position.y - m_v3LastCrosshairPos.y) * m_cameraRotationCoefficient * Time.deltaTime;
             m_v3AddedRotation.y += (m_crosshair.transform.position.x - m_v3LastCrosshairPos.x) * m_cameraRotationCoefficient * Time.deltaTime;
-
-            Vector3 rot = m_v3AddedRotation + GetComponent<MovementController>().GetCurrentPoint().transform.rotation.eulerAngles;
-            transform.localRotation = Quaternion.Euler(rot);
+            Vector3 rot;
+            rot = m_v3AddedRotation + GetComponent<MovementController>().GetCurrentPoint().transform.rotation.eulerAngles;
+            if (!GetComponent<MovementController>().m_bMovingPoints)
+                transform.localRotation = Quaternion.Euler(rot);
         }
-
+        // set last crosshair position
         m_v3LastCrosshairPos = m_crosshair.transform.position;
         // disable muzzle flash if still active and timer has expired
         if (m_muzzleFlash.activeSelf
