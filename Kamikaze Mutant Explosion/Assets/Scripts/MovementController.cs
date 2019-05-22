@@ -11,6 +11,12 @@ public class MovementController : MonoBehaviour
     private bool m_bMovingPoints = false;
     private int m_iCurrentPoint = 0;
 
+    private void Awake()
+    {
+        // set starting position and rotation
+        transform.position = m_points[0].transform.position;
+        transform.rotation = m_points[0].transform.rotation;
+    }
     // Update is called once per frame
     void Update()
     {
