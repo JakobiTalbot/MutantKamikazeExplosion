@@ -48,6 +48,10 @@ public class PlayerController : MonoBehaviour
         // move crosshair
         Vector3 v3NewPos = m_crosshair.transform.position;
         v3NewPos += new Vector3(Input.GetAxis("Mouse X"), Input.GetAxis("Mouse Y"), 0) * m_mouseSensitivity * Time.deltaTime;
+        // clamp to screen boundaries
+        v3NewPos.x = Mathf.Clamp(v3NewPos.x, 0, Screen.width);
+        v3NewPos.y = Mathf.Clamp(v3NewPos.y, 0, Screen.height);
+        // set crosshair position
         m_crosshair.transform.position = v3NewPos;
 
         // rotate camera if bool enabled
