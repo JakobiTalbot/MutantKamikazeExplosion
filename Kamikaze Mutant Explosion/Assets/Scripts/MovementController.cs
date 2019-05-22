@@ -4,11 +4,16 @@ using UnityEngine;
 
 public class MovementController : MonoBehaviour
 {
+    // array of points to move between
     public GameObject[] m_points;
+    // speed to move between points
     public float m_moveSpeed = 1f;
 
+    // float for storing current normalised distance between 2 points
     private float m_fLerpTime = 0f;
+    // bool to store whether we are moving or not
     private bool m_bMovingPoints = false;
+    // int to to store the index of the current point
     private int m_iCurrentPoint = 0;
 
     private void Awake()
@@ -46,7 +51,8 @@ public class MovementController : MonoBehaviour
             // lerp position
             transform.position = Vector3.Lerp(m_points[iPrevPoint].transform.position, m_points[m_iCurrentPoint].transform.position, m_fLerpTime);
             // lerp rotation
-            transform.rotation = Quaternion.Lerp(m_points[iPrevPoint].transform.rotation, m_points[m_iCurrentPoint].transform.rotation, m_fLerpTime);
+            transform.rotation = Quaternion.Euler(Vector3.Lerp(m_points[iPrevPoint].transform.rotation.eulerAngles, m_points[m_iCurrentPoint].transform.rotation.eulerAngles, m_fLerpTime)
+                + GetComponent<PlayerController>().m_v3AddedRotation);
         }
 
         // debug
@@ -68,4 +74,7 @@ public class MovementController : MonoBehaviour
         // enable moving points
         m_bMovingPoints = true;
     }
+
+    // return current point
+    public GameObject GetCurrentPoint() => m_points[m_iCurrentPoint];
 }

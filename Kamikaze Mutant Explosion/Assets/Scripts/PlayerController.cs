@@ -5,15 +5,22 @@ using UnityEngine;
 public class PlayerController : MonoBehaviour
 {
     // texture for the crosshair on screen
-    public Texture2D m_crosshairTexture;
+    public GameObject m_crosshair;
     // mouse sensitivity multiplier
-    public float m_mouseSensitivity = 1f;
+    public float m_mouseSensitivity = 300f;
     // texture for muzzle flash when firing
     public GameObject m_muzzleFlash;
     // time for the muzzle flash to be on screen
     public float m_muzzleFlashTime = 0.1f;
     // cooldown between shooting
     public float m_shootCooldown = 0.1f;
+    // amount to move the camera by if rotating camera
+    public float m_cameraRotationCoefficient = 5f;
+
+    [HideInInspector]
+    public bool m_bRotateCamera = true;
+    [HideInInspector]
+    public Vector3 m_v3AddedRotation;
 
     // how many lives the player has
     private int m_nLives = 3;
@@ -22,11 +29,13 @@ public class PlayerController : MonoBehaviour
     // timer to count until the player can shoot again
     private float m_fShootTimer = 0f;
 
+    private Vector3 m_v3LastCrosshairPos;
 
     void Awake()
     {
         // set cursor to crosshair
-        Cursor.SetCursor(m_crosshairTexture, new Vector2(m_crosshairTexture.width * 0.5f, m_crosshairTexture.height * 0.5f), CursorMode.ForceSoftware);
+        Cursor.lockState = CursorLockMode.Locked;
+        m_v3LastCrosshairPos = m_crosshair.transform.position;
     }
 
     // Update is called once per frame
@@ -36,19 +45,36 @@ public class PlayerController : MonoBehaviour
         m_fShootTimer -= Time.deltaTime;
         m_fMuzzleFlashTimer -= Time.deltaTime;
 
+        // move crosshair
+        Vector3 v3NewPos = m_crosshair.transform.position;
+        v3NewPos += new Vector3(Input.GetAxis("Mouse X"), Input.GetAxis("Mouse Y"), 0) * m_mouseSensitivity * Time.deltaTime;
+        m_crosshair.transform.position = v3NewPos;
+
+        // rotate camera if bool enabled
+        if (true)
+        {
+            
+            m_v3AddedRotation.x -= (m_crosshair.transform.position.y - m_v3LastCrosshairPos.y) * m_cameraRotationCoefficient * Time.deltaTime;
+            m_v3AddedRotation.y += (m_crosshair.transform.position.x - m_v3LastCrosshairPos.x) * m_cameraRotationCoefficient * Time.deltaTime;
+
+            Vector3 rot = m_v3AddedRotation + GetComponent<MovementController>().GetCurrentPoint().transform.rotation.eulerAngles;
+            transform.localRotation = Quaternion.Euler(rot);
+        }
+
+        m_v3LastCrosshairPos = m_crosshair.transform.position;
         // disable muzzle flash if still active and timer has expired
         if (m_muzzleFlash.activeSelf
             && m_fMuzzleFlashTimer <= 0f)
             m_muzzleFlash.SetActive(false);
-        else if (m_muzzleFlash.activeSelf) // set position to follow cursor if muzzle flash still enabled
-            m_muzzleFlash.transform.position = Input.mousePosition;
+        else if (m_muzzleFlash.activeSelf) // set position to follow crosshair if muzzle flash still enabled
+            m_muzzleFlash.transform.position = m_crosshair.transform.position;
 
         // if the player clicks and can shoot
         if (Input.GetMouseButtonDown(0)
             && m_fShootTimer <= 0f)
         {
             // display muzzle flash, rotate muzzle flash randomly, set timer
-            m_muzzleFlash.transform.position = Input.mousePosition;
+            m_muzzleFlash.transform.position = m_crosshair.transform.position;
             m_muzzleFlash.SetActive(true);
             m_muzzleFlash.transform.Rotate(new Vector3(0, 0, Random.Range(0f, 360f)));
             m_fMuzzleFlashTimer = m_muzzleFlashTime;
