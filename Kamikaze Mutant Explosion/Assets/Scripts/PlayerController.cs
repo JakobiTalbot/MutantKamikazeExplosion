@@ -87,10 +87,10 @@ public class PlayerController : MonoBehaviour
             RaycastHit hit = new RaycastHit();
 
             // check if hit an enemy
-            if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hit)
+            if (Physics.Raycast(Camera.main.ScreenPointToRay(m_crosshair.transform.position), out hit)
                 && hit.collider.CompareTag("Enemy"))
             {
-                // hit enemy
+                hit.collider.GetComponent<Enemy>().TakeDamage();
             }
 
             // set shoot timer

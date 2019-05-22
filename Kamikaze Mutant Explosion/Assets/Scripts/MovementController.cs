@@ -18,12 +18,18 @@ public class MovementController : MonoBehaviour
     public bool m_bMovingPoints = false;
     // int to to store the index of the current point
     private int m_iCurrentPoint = 0;
+    // stores a reference to the enemy spawner
+    private EnemySpawner m_enemySpawner;
 
     private void Awake()
     {
+        // find enemy spawner
+        m_enemySpawner = GameObject.FindGameObjectWithTag("EnemySpawner").GetComponent<EnemySpawner>();
         // set starting position and rotation
         transform.position = m_points[0].transform.position;
         transform.rotation = m_points[0].transform.rotation;
+        // spawn starting enemies
+        m_enemySpawner.SpawnEnemies(m_iCurrentPoint);
     }
     // Update is called once per frame
     void Update()
@@ -48,6 +54,7 @@ public class MovementController : MonoBehaviour
                 && m_fRotLerpTime >= 1f)
             {
                 m_bMovingPoints = false;
+                m_enemySpawner.SpawnEnemies(m_iCurrentPoint);
             }
 
             int iPrevPoint;
