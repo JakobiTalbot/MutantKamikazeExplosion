@@ -117,6 +117,11 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 61470edc03bb8c84892d85d89a035bfc, type: 3}
   - {fileID: 8300000, guid: 2a6f13f8bea5e2943a295a96d9952bf8, type: 3}
   - {fileID: 8300000, guid: 9b822ff43bbfbe14e87f246b66c6daa7, type: 3}
+  m_grenade: {fileID: 2159568765191329834, guid: 4a0bb881183d1b146a27e90e7d5e0193,
+    type: 3}
+  m_droppedGrenadeDamage: 2
+  m_droppedGrenadeExplosionRadius: 2
+  m_droppedGrenadeTimer: 1
 --- !u!195 &1016234573018275001
 NavMeshAgent:
   m_ObjectHideFlags: 0

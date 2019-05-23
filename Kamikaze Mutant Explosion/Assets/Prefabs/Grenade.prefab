@@ -95,7 +95,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_explodeRadius: 4
   m_timeToExplode: 1
-  m_explosionDamage: 2
+  m_explosionDamage: 10
   m_explosionAudioClips:
   - {fileID: 8300000, guid: 2e03c068701f92f4a9b1ec8d74b7e1c6, type: 3}
   - {fileID: 8300000, guid: 97aba9502baa9ef41a7a6cee33d07c77, type: 3}
