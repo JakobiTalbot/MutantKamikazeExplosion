@@ -10,6 +10,7 @@ public class Grenade : MonoBehaviour
     public int m_explosionDamage = 1;
     // different explosion clip variants to play
     public AudioClip[] m_explosionAudioClips;
+    // particle prefab to be created upon grenade exploding
     public GameObject m_explosionParticle;
 
     // whether the grenade has been thrown or not

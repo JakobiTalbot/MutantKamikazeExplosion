@@ -15,6 +15,12 @@ public class Enemy : MonoBehaviour
     public AudioClip[] m_gruntAudioClips;
     // clips played when hit
     public AudioClip[] m_hitAudioClips;
+    // grenade prefab to be dropped on death
+    public GameObject m_grenade;
+    // values to set to the grenade that's dropped
+    public int m_droppedGrenadeDamage = 1;
+    public float m_droppedGrenadeExplosionRadius = 1f;
+    public float m_droppedGrenadeTimer = 1f;
 
     // stores a reference to the NavMeshAgent on the enemy GameObject
     private NavMeshAgent m_agent;
@@ -58,8 +64,12 @@ public class Enemy : MonoBehaviour
         // check if dead
         if (m_nHealth <= 0)
         {
-            // adds grenades
-            Camera.main.GetComponent<PlayerController>().AddGrenades(1);
+            // drop grenade
+            Grenade grenade = Instantiate(m_grenade, transform.position, Quaternion.Euler(Vector3.zero)).GetComponent<Grenade>();
+            // set grenade values
+            grenade.m_explodeRadius = m_droppedGrenadeExplosionRadius;
+            grenade.m_explosionDamage = m_droppedGrenadeDamage;
+            grenade.m_timeToExplode = m_droppedGrenadeTimer;
             // get reference to score manager
             ScoreManager manager = GameObject.FindGameObjectWithTag("ScoreManager").GetComponent<ScoreManager>();
             // set multiplier timer

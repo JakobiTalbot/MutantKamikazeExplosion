@@ -9,6 +9,7 @@ public class MovementController : MonoBehaviour
     // speed to move between points
     public float m_moveSpeed = 1f;
     public float m_rotateSpeed = 1f;
+    public int m_grenadesToAddOnLoop = 1;
 
     // float for storing current normalised distance between 2 points
     private float m_fPosLerpTime = 0f;
@@ -91,6 +92,8 @@ public class MovementController : MonoBehaviour
             m_iCurrentPoint = 0;
             // increment wave count each loop
             m_enemySpawner.IncrementWavesToSpawn();
+            // give player grenades when looping
+            Camera.main.GetComponent<PlayerController>().AddGrenades(m_grenadesToAddOnLoop);
         }
         else
             m_iCurrentPoint++;
