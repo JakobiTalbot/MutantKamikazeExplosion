@@ -12,7 +12,7 @@ public class Enemy : MonoBehaviour
     // the score value of killing the enemy
     public int m_scoreValue = 100;
     // clips played at random
-    public AudioClip[] m_ambientAudioClips;
+    public AudioClip[] m_gruntAudioClips;
     // clips played when hit
     public AudioClip[] m_hitAudioClips;
 

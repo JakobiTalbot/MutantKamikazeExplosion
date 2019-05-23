@@ -123,10 +123,13 @@ public class PlayerController : MonoBehaviour
         if (Input.GetMouseButtonDown(1)
             && m_nGrenadeCount > 0)
         {
+            // get direction for grenade to be thrown using raycast
+            Ray ray = Camera.main.ScreenPointToRay(m_crosshair.transform.position);
+            Vector3 v3GrenadeStartPos = ray.origin + (ray.direction * 1f);
             // instantiate grenade
-            GameObject grenade = Instantiate(m_grenade, transform.position + transform.forward, Quaternion.Euler(Vector3.zero));
+            GameObject grenade = Instantiate(m_grenade, v3GrenadeStartPos, Quaternion.Euler(Vector3.zero));
             // add velocity to grenade
-            grenade.GetComponent<Rigidbody>().velocity += (grenade.transform.position - transform.position) * m_grenadeThrowVelocity;
+            grenade.GetComponent<Rigidbody>().velocity += transform.forward * m_grenadeThrowVelocity;
         }
     }
 

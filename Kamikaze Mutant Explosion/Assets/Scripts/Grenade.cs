@@ -8,6 +8,8 @@ public class Grenade : MonoBehaviour
     public float m_timeToExplode = 4f;
     // the damage dealt by the explosion
     public int m_explosionDamage = 1;
+    // different explosion clip variants to play
+    public AudioClip[] m_explosionAudioClips;
 
     // stores a reference to the GameObject's audio source
     private AudioSource m_audioSource;
@@ -27,8 +29,8 @@ public class Grenade : MonoBehaviour
         // explode bomb if timer has reached 0
         if (m_timeToExplode <= 0f)
         {
-            // play explosion audio
-            m_audioSource.PlayOneShot(m_audioSource.clip);
+            // play random explosion audio clip
+            m_audioSource.PlayOneShot(m_explosionAudioClips[Random.Range(0, m_explosionAudioClips.Length)]);
             // loop through each collider in a sphere radius
             foreach (Collider collider in Physics.OverlapSphere(transform.position, m_explodeRadius))
             {
