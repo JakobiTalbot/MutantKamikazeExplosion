@@ -70,6 +70,8 @@ public class Enemy : MonoBehaviour
             grenade.m_explodeRadius = m_droppedGrenadeExplosionRadius;
             grenade.m_explosionDamage = m_droppedGrenadeDamage;
             grenade.m_timeToExplode = m_droppedGrenadeTimer;
+            // set grenade to thrown
+            grenade.m_bThrown = true;
             // get reference to score manager
             ScoreManager manager = GameObject.FindGameObjectWithTag("ScoreManager").GetComponent<ScoreManager>();
             // set multiplier timer
