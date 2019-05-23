@@ -53,6 +53,8 @@ public class Enemy : MonoBehaviour
             manager.AddScore(m_scoreValue);
             // increment score multiplier
             manager.IncrementMultiplier();
+            // remove enemy
+            GameObject.FindGameObjectWithTag("EnemySpawner").GetComponent<EnemySpawner>().RemoveEnemy();
             Destroy(gameObject); // delete
         }
     }

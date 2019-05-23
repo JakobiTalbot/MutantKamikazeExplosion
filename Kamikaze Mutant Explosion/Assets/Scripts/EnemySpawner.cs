@@ -22,6 +22,17 @@ public class EnemySpawner : MonoBehaviour
     private int m_nWavesToSpawn = 1;
     // stores the index of the current point
     private int m_iCurrentPoint = 0;
+    // the current number of enemies alive
+    private int m_nEnemyCount = 0;
+    // stores a reference the the movement controller
+    private MovementController m_movementController;
+    // stores the count of waves spawned
+    private int m_nWavesSpawned = 0;
+
+    private void Awake()
+    {
+        m_movementController = Camera.main.GetComponent<MovementController>();
+    }
 
     /* @brief Spawns enemies at the spawn points assigned to the point index
        @param The index of the point to spawn enemies at
@@ -46,7 +57,9 @@ public class EnemySpawner : MonoBehaviour
         {
             // spawn random enemy type
             Instantiate(m_enemyTypes[Random.Range(0, m_enemyTypes.Length)], spawnPoint.transform.position, spawnPoint.transform.rotation);
+            m_nEnemyCount++;
         }
+        m_nWavesSpawned++;
     }
 
     /*  @brief Increments the waves to be spawn for each point by 1
@@ -54,5 +67,23 @@ public class EnemySpawner : MonoBehaviour
     public void IncrementWavesToSpawn()
     {
         m_nWavesToSpawn++;
+    }
+
+    /*  @brief Decrements enemy count
+               Makes the movement controller move to the next point if all enemies are dead and all waves have been spawned
+    */
+    public void RemoveEnemy()
+    {
+        // decrement enemy count
+        m_nEnemyCount--;
+        // checks if enemy count is 0 and all waves have been spawned
+        if (m_nEnemyCount <= 0
+            && m_nWavesSpawned == m_nWavesToSpawn)
+        {
+            // reset waves spawned to 0
+            m_nWavesSpawned = 0;
+            // move to next point
+            m_movementController.MoveToNextPoint();
+        }
     }
 }
