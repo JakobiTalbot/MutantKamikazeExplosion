@@ -58,6 +58,8 @@ public class Enemy : MonoBehaviour
         // check if dead
         if (m_nHealth <= 0)
         {
+            // adds grenades
+            Camera.main.GetComponent<PlayerController>().AddGrenades(1);
             // get reference to score manager
             ScoreManager manager = GameObject.FindGameObjectWithTag("ScoreManager").GetComponent<ScoreManager>();
             // set multiplier timer

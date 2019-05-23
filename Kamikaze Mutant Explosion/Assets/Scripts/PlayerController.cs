@@ -24,18 +24,18 @@ public class PlayerController : MonoBehaviour
     public GameObject m_grenade;
     // the amount of grenades the player has at the start of the game
     public int m_startGrenadeCount = 3;
+    // the maximum amount of grenades the player can have
+    public int m_maxGrenadeCount = 3;
     // the velocity for the grenade to be thrown
     public float m_grenadeThrowVelocity = 100f;
-
-    // TRAJECTORY DISPLAY
-    private LineRenderer m_lineRenderer;
+    // number of points for the trajectory line renderer to have
     public int m_trajectoryPointCount = 30;
-    private List<GameObject> m_trajectoryPoints;
+    // stores a reference to the grenades on the UI
+    public GameObject[] m_grenadeUIs;
 
     // rotation based off camera movement to be added to base rotation
     [HideInInspector]
     public Vector3 m_v3AddedRotation;
-    
 
     // how many lives the player has
     private int m_nLives = 3;
@@ -51,11 +51,18 @@ public class PlayerController : MonoBehaviour
     private int m_nGrenadeCount;
     // whether the player is holding grenade out or not
     private bool m_bHoldingGrenade = false;
+    // held grenade object
     private GameObject m_heldGrenade;
+    // reference to line renderer component
+    private LineRenderer m_lineRenderer;
 
     void Awake()
     {
+        // get reference to line renderer
         m_lineRenderer = GetComponent<LineRenderer>();
+        // set position count
+        m_lineRenderer.positionCount = m_trajectoryPointCount;
+        // disable line renderer
         m_lineRenderer.enabled = false;
         // set starting grenade count
         m_nGrenadeCount = m_startGrenadeCount;
@@ -135,7 +142,9 @@ public class PlayerController : MonoBehaviour
         Vector3 v3GrenadeStartPos = ray.origin + (ray.direction * 1f);
         if (m_bHoldingGrenade)
         {
+            // set new grenade position
             m_heldGrenade.transform.position = v3GrenadeStartPos;
+            // calculate and draw trajectory line
             UpdateTrajectory(v3GrenadeStartPos, transform.forward * m_grenadeThrowVelocity);
         }
 
@@ -163,6 +172,8 @@ public class PlayerController : MonoBehaviour
             m_heldGrenade.GetComponent<Rigidbody>().velocity += transform.forward * m_grenadeThrowVelocity;
             // decrement grenade count
             m_nGrenadeCount--;
+            // disable grenade on UI
+            m_grenadeUIs[m_nGrenadeCount].SetActive(false);
             // allow shooting again
             m_crosshair.SetActive(true);
             m_muzzleFlash.SetActive(true);
@@ -191,12 +202,11 @@ public class PlayerController : MonoBehaviour
         @param The initial position of the grenade
         @param The initial velocity of the grenade
     */
-    void UpdateTrajectory(Vector3 v3InitialPos, Vector3 v3InitialVelocity)
+    private void UpdateTrajectory(Vector3 v3InitialPos, Vector3 v3InitialVelocity)
     {
         float timeDelta = 1.0f / v3InitialVelocity.magnitude;
 
-        m_lineRenderer.positionCount = m_trajectoryPointCount;
-
+        // copy position and velocity
         Vector3 position = v3InitialPos;
         Vector3 velocity = v3InitialVelocity;
         for (int i = 0; i < m_trajectoryPointCount; ++i)
@@ -205,6 +215,23 @@ public class PlayerController : MonoBehaviour
 
             position += velocity * timeDelta + 0.5f * Physics.gravity * timeDelta * timeDelta;
             velocity += Physics.gravity * timeDelta;
+        }
+    }
+
+    /*  @brief Adds a number of grenades to the player's current grenade count
+        @param The number of grenades to add to the player's grenade count
+    */
+    public void AddGrenades(int nGrenades)
+    {
+        for (int i = 0; i < nGrenades; ++i)
+        {
+            // don't add grenade if at max grenade count
+            if (m_nGrenadeCount == m_maxGrenadeCount)
+                break;
+            // enable grenade on UI
+            m_grenadeUIs[m_nGrenadeCount].SetActive(true);
+            // increment grenade count
+            m_nGrenadeCount++;
         }
     }
 }

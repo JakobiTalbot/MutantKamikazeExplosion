@@ -40,8 +40,8 @@ public class Grenade : MonoBehaviour
         {
             // play random explosion audio clip
             m_audioSource.PlayOneShot(m_explosionAudioClips[Random.Range(0, m_explosionAudioClips.Length)]);
-            // create particles
-            Destroy(Instantiate(m_explosionParticle, transform.position, Quaternion.Euler(Vector3.zero)), 5f);
+            // create particles (-90 x rotation because explosion prefab is weird)
+            Destroy(Instantiate(m_explosionParticle, transform.position, Quaternion.Euler(-90, 0, 0)), 5f);
             // loop through each collider in a sphere radius
             foreach (Collider collider in Physics.OverlapSphere(transform.position, m_explodeRadius))
             {
