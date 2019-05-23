@@ -100,6 +100,9 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 2e03c068701f92f4a9b1ec8d74b7e1c6, type: 3}
   - {fileID: 8300000, guid: 97aba9502baa9ef41a7a6cee33d07c77, type: 3}
   - {fileID: 8300000, guid: e5bc647c7f0b6064bb6a2edbb30783e0, type: 3}
+  m_explosionParticle: {fileID: 1431530912211830, guid: 585a1ef8c48a0cf4f97332139e4344de,
+    type: 3}
+  m_bThrown: 0
 --- !u!54 &2319365511872627127
 Rigidbody:
   m_ObjectHideFlags: 0
