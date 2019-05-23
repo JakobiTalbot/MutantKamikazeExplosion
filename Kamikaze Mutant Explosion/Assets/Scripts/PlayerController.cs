@@ -16,10 +16,21 @@ public class PlayerController : MonoBehaviour
     public float m_shootCooldown = 0.1f;
     // amount to move the camera by if rotating camera
     public float m_cameraRotationCoefficient = 500f;
+    // range of the pitch of audio source
+    public Vector2 m_minMaxPitchRange = new Vector2(1, 2);
+    // damage dealt with shots
+    public int m_bulletDamage = 1;
+    // prefab for grenade
+    public GameObject m_grenade;
+    // the amount of grenades the player has at the start of the game
+    public int m_startGrenadeCount = 3;
+    // the velocity for the grenade to be thrown
+    public float m_grenadeThrowVelocity = 100f;
 
     // rotation based off camera movement to be added to base rotation
     [HideInInspector]
     public Vector3 m_v3AddedRotation;
+    
 
     // how many lives the player has
     private int m_nLives = 3;
@@ -29,9 +40,17 @@ public class PlayerController : MonoBehaviour
     private float m_fShootTimer = 0f;
     // the last position of the crosshair
     private Vector3 m_v3LastCrosshairPos;
+    // reference to the audiosource on this gameobject
+    private AudioSource m_audioSource;
+    // the current amount of grenades the player has
+    private int m_nGrenadeCount;
 
     void Awake()
     {
+        // set starting grenade count
+        m_nGrenadeCount = m_startGrenadeCount;
+        // get reference to audio source
+        m_audioSource = GetComponent<AudioSource>();
         // set cursor to crosshair
         Cursor.lockState = CursorLockMode.Locked;
         // initialise last crosshair position
@@ -71,7 +90,7 @@ public class PlayerController : MonoBehaviour
         else if (m_muzzleFlash.activeSelf) // set position to follow crosshair if muzzle flash still enabled
             m_muzzleFlash.transform.position = m_crosshair.transform.position;
 
-        // if the player clicks and can shoot
+        // if the player left clicks and can shoot
         if (Input.GetMouseButtonDown(0)
             && m_fShootTimer <= 0f)
         {
@@ -81,6 +100,11 @@ public class PlayerController : MonoBehaviour
             m_muzzleFlash.transform.Rotate(new Vector3(0, 0, Random.Range(0f, 360f)));
             m_fMuzzleFlashTimer = m_muzzleFlashTime;
 
+            // set random weapon pitch
+            m_audioSource.pitch = Random.Range(m_minMaxPitchRange.x, m_minMaxPitchRange.y);
+            // play gunshot sound
+            m_audioSource.PlayOneShot(m_audioSource.clip);
+
             // create raycast hit data
             RaycastHit hit = new RaycastHit();
 
@@ -88,11 +112,21 @@ public class PlayerController : MonoBehaviour
             if (Physics.Raycast(Camera.main.ScreenPointToRay(m_crosshair.transform.position), out hit)
                 && hit.collider.CompareTag("Enemy"))
             {
-                hit.collider.GetComponent<Enemy>().TakeDamage();
+                hit.collider.GetComponent<Enemy>().TakeDamage(m_bulletDamage);
             }
 
             // set shoot timer
             m_fShootTimer = m_shootCooldown;
+        }
+
+        // throw grenade if right mouse button clicked and we have a grenade available
+        if (Input.GetMouseButtonDown(1)
+            && m_nGrenadeCount > 0)
+        {
+            // instantiate grenade
+            GameObject grenade = Instantiate(m_grenade, transform.position + transform.forward, Quaternion.Euler(Vector3.zero));
+            // add velocity to grenade
+            grenade.GetComponent<Rigidbody>().velocity += (grenade.transform.position - transform.position) * m_grenadeThrowVelocity;
         }
     }
 

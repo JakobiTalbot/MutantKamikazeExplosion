@@ -12,6 +12,8 @@ public class ScoreManager : MonoBehaviour
     // time before multiplier is reset to 1
     public float m_timeToResetMultiplier = 0.5f;
 
+    // reference to the movement controller script
+    MovementController m_movementController;
     // the score the player currently has
     private int m_nCurrentScore = 0;
     // the current score multiplier
@@ -19,10 +21,17 @@ public class ScoreManager : MonoBehaviour
     // timer to reset multiplier
     private float m_fResetMultiTimer = 0;
 
+    private void Awake()
+    {
+        // get reference to movement controller
+        m_movementController = Camera.main.GetComponent<MovementController>();
+    }
+
     private void Update()
     {
-        // counts down on the multiplier reset timer
-        m_fResetMultiTimer -= Time.deltaTime;
+        // counts down on the multiplier reset timer if not moving
+        if (!m_movementController.m_bMovingPoints)
+            m_fResetMultiTimer -= Time.deltaTime;
         // reset multiplier if less than 0
         if (m_fResetMultiTimer <= 0)
             SetMultiplier(1);
