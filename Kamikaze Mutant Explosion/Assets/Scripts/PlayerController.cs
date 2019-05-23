@@ -15,7 +15,7 @@ public class PlayerController : MonoBehaviour
     // cooldown between shooting
     public float m_shootCooldown = 0.1f;
     // amount to move the camera by if rotating camera
-    public float m_cameraRotationCoefficient = 5f;
+    public float m_cameraRotationCoefficient = 500f;
 
     // rotation based off camera movement to be added to base rotation
     [HideInInspector]
@@ -55,8 +55,8 @@ public class PlayerController : MonoBehaviour
         m_crosshair.transform.position = v3NewPos;
 
         // rotate camera
-        m_v3AddedRotation.x -= (m_crosshair.transform.position.y - m_v3LastCrosshairPos.y) * m_cameraRotationCoefficient * Time.deltaTime;
-        m_v3AddedRotation.y += (m_crosshair.transform.position.x - m_v3LastCrosshairPos.x) * m_cameraRotationCoefficient * Time.deltaTime;
+        m_v3AddedRotation.x -= (m_crosshair.transform.position.y - m_v3LastCrosshairPos.y) * m_cameraRotationCoefficient / Screen.width * Time.deltaTime;
+        m_v3AddedRotation.y += (m_crosshair.transform.position.x - m_v3LastCrosshairPos.x) * m_cameraRotationCoefficient / Screen.height * Time.deltaTime;
         Vector3 rot;
         rot = m_v3AddedRotation + GetComponent<MovementController>().GetCurrentPoint().transform.rotation.eulerAngles;
         if (!GetComponent<MovementController>().m_bMovingPoints)

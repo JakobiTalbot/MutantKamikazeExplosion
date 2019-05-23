@@ -78,6 +78,7 @@ public class MovementController : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.W))
         {
             MoveToNextPoint();
+            GameObject.FindGameObjectWithTag("EnemySpawner").GetComponent<EnemySpawner>().CancelInvoke();
             GameObject.FindGameObjectWithTag("EnemySpawner").GetComponent<EnemySpawner>().m_nWavesSpawned = 0;
         }
     }
