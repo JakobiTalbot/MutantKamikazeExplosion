@@ -10,6 +10,11 @@ public class Grenade : MonoBehaviour
     public int m_explosionDamage = 1;
     // different explosion clip variants to play
     public AudioClip[] m_explosionAudioClips;
+    public GameObject m_explosionParticle;
+
+    // whether the grenade has been thrown or not
+    [HideInInspector]
+    public bool m_bThrown = false;
 
     // stores a reference to the GameObject's audio source
     private AudioSource m_audioSource;
@@ -23,6 +28,10 @@ public class Grenade : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        // don't update if grenade not thrown
+        if (!m_bThrown)
+            return;
+
         // count down on timer
         m_timeToExplode -= Time.deltaTime;
 
@@ -31,6 +40,8 @@ public class Grenade : MonoBehaviour
         {
             // play random explosion audio clip
             m_audioSource.PlayOneShot(m_explosionAudioClips[Random.Range(0, m_explosionAudioClips.Length)]);
+            // create particles
+            Destroy(Instantiate(m_explosionParticle, transform.position, Quaternion.Euler(Vector3.zero)), 5f);
             // loop through each collider in a sphere radius
             foreach (Collider collider in Physics.OverlapSphere(transform.position, m_explodeRadius))
             {

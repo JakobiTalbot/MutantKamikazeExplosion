@@ -27,6 +27,11 @@ public class PlayerController : MonoBehaviour
     // the velocity for the grenade to be thrown
     public float m_grenadeThrowVelocity = 100f;
 
+    // TRAJECTORY DISPLAY
+    private LineRenderer m_lineRenderer;
+    public int m_trajectoryPointCount = 30;
+    private List<GameObject> m_trajectoryPoints;
+
     // rotation based off camera movement to be added to base rotation
     [HideInInspector]
     public Vector3 m_v3AddedRotation;
@@ -44,9 +49,14 @@ public class PlayerController : MonoBehaviour
     private AudioSource m_audioSource;
     // the current amount of grenades the player has
     private int m_nGrenadeCount;
+    // whether the player is holding grenade out or not
+    private bool m_bHoldingGrenade = false;
+    private GameObject m_heldGrenade;
 
     void Awake()
     {
+        m_lineRenderer = GetComponent<LineRenderer>();
+        m_lineRenderer.enabled = false;
         // set starting grenade count
         m_nGrenadeCount = m_startGrenadeCount;
         // get reference to audio source
@@ -92,7 +102,8 @@ public class PlayerController : MonoBehaviour
 
         // if the player left clicks and can shoot
         if (Input.GetMouseButtonDown(0)
-            && m_fShootTimer <= 0f)
+            && m_fShootTimer <= 0f
+            && !m_bHoldingGrenade)
         {
             // display muzzle flash, rotate muzzle flash randomly, set timer
             m_muzzleFlash.transform.position = m_crosshair.transform.position;
@@ -119,17 +130,49 @@ public class PlayerController : MonoBehaviour
             m_fShootTimer = m_shootCooldown;
         }
 
+        // get direction for grenade to be thrown using raycast
+        Ray ray = Camera.main.ScreenPointToRay(m_crosshair.transform.position);
+        Vector3 v3GrenadeStartPos = ray.origin + (ray.direction * 1f);
+        if (m_bHoldingGrenade)
+        {
+            m_heldGrenade.transform.position = v3GrenadeStartPos;
+            UpdateTrajectory(v3GrenadeStartPos, transform.forward * m_grenadeThrowVelocity);
+        }
+
         // throw grenade if right mouse button clicked and we have a grenade available
-        if (Input.GetMouseButtonDown(1)
+        if (Input.GetMouseButton(1)
+            && m_nGrenadeCount > 0
+            && !m_bHoldingGrenade)
+        {
+            // create grenade object
+            m_heldGrenade = Instantiate(m_grenade, v3GrenadeStartPos, Quaternion.Euler(Vector3.zero));
+            // disable shooting
+            m_crosshair.SetActive(false);
+            m_muzzleFlash.SetActive(false);
+            m_bHoldingGrenade = true;
+            // enable kinematic state to prevent gain of velocity from gravity
+            m_heldGrenade.GetComponent<Rigidbody>().isKinematic = true;
+            // enable trajectory renderer
+            m_lineRenderer.enabled = true;
+        }
+
+        if (Input.GetMouseButtonUp(1)
             && m_nGrenadeCount > 0)
         {
-            // get direction for grenade to be thrown using raycast
-            Ray ray = Camera.main.ScreenPointToRay(m_crosshair.transform.position);
-            Vector3 v3GrenadeStartPos = ray.origin + (ray.direction * 1f);
-            // instantiate grenade
-            GameObject grenade = Instantiate(m_grenade, v3GrenadeStartPos, Quaternion.Euler(Vector3.zero));
             // add velocity to grenade
-            grenade.GetComponent<Rigidbody>().velocity += transform.forward * m_grenadeThrowVelocity;
+            m_heldGrenade.GetComponent<Rigidbody>().velocity += transform.forward * m_grenadeThrowVelocity;
+            // decrement grenade count
+            m_nGrenadeCount--;
+            // allow shooting again
+            m_crosshair.SetActive(true);
+            m_muzzleFlash.SetActive(true);
+            m_bHoldingGrenade = false;
+            // disable kinematic state
+            m_heldGrenade.GetComponent<Rigidbody>().isKinematic = false;
+            // disable trajectory renderer
+            m_lineRenderer.enabled = false;
+            // set grenade state to thrown
+            m_heldGrenade.GetComponent<Grenade>().m_bThrown = true;
         }
     }
 
@@ -142,5 +185,26 @@ public class PlayerController : MonoBehaviour
         // if dead
         if (m_nLives == 0)
             return;
+    }
+
+    /*  @brief Calculates and draws the trajectory of grenade toss
+        @param The initial position of the grenade
+        @param The initial velocity of the grenade
+    */
+    void UpdateTrajectory(Vector3 v3InitialPos, Vector3 v3InitialVelocity)
+    {
+        float timeDelta = 1.0f / v3InitialVelocity.magnitude;
+
+        m_lineRenderer.positionCount = m_trajectoryPointCount;
+
+        Vector3 position = v3InitialPos;
+        Vector3 velocity = v3InitialVelocity;
+        for (int i = 0; i < m_trajectoryPointCount; ++i)
+        {
+            m_lineRenderer.SetPosition(i, position);
+
+            position += velocity * timeDelta + 0.5f * Physics.gravity * timeDelta * timeDelta;
+            velocity += Physics.gravity * timeDelta;
+        }
     }
 }
