@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class PlayerController : MonoBehaviour
 {
@@ -26,19 +27,29 @@ public class PlayerController : MonoBehaviour
     public int m_startGrenadeCount = 3;
     // the maximum amount of grenades the player can have
     public int m_maxGrenadeCount = 3;
-    // the velocity for the grenade to be thrown
-    public float m_grenadeThrowVelocity = 100f;
+    // the velocity applied to the grenade outwards
+    public float m_grenadeOutwardsVelocity = 10f;
+    // the velocity applied to the grenade upwards
+    public float m_grenadeUpwardsVelocity = 5f;
     // number of points for the trajectory line renderer to have
     public int m_trajectoryPointCount = 30;
     // stores a reference to the grenades on the UI
-    public GameObject[] m_grenadeUIs;
+    public GameObject[] m_grenadeImages;
+    // player's starting lives count
+    public int m_startingLivesCount = 3;
+    // stores a reference to the lives on the UI
+    public GameObject[] m_lifeImages;
+    // the texture to be applied to the life image when it hasn't been taken yet
+    public Texture2D m_aliveTexture;
+    // the texture to be applied to the life image when it has been taken
+    public Texture2D m_deadTexture;
 
     // rotation based off camera movement to be added to base rotation
     [HideInInspector]
     public Vector3 m_v3AddedRotation;
 
     // how many lives the player has
-    private int m_nLives = 3;
+    private int m_nLives;
     // timer to count until the muzzle flash disappears
     private float m_fMuzzleFlashTimer = 0f;
     // timer to count until the player can shoot again
@@ -58,6 +69,8 @@ public class PlayerController : MonoBehaviour
 
     void Awake()
     {
+        // set default lives count
+        m_nLives = m_startingLivesCount;
         // get reference to line renderer
         m_lineRenderer = GetComponent<LineRenderer>();
         // set position count
@@ -145,7 +158,7 @@ public class PlayerController : MonoBehaviour
             // set new grenade position
             m_heldGrenade.transform.position = v3GrenadeStartPos;
             // calculate and draw trajectory line
-            UpdateTrajectory(v3GrenadeStartPos, transform.forward * m_grenadeThrowVelocity);
+            UpdateTrajectory(v3GrenadeStartPos, (transform.forward * m_grenadeOutwardsVelocity) + (transform.up * m_grenadeUpwardsVelocity));
         }
 
         // throw grenade if right mouse button clicked and we have a grenade available
@@ -169,14 +182,13 @@ public class PlayerController : MonoBehaviour
             && m_nGrenadeCount > 0)
         {
             // add velocity to grenade
-            m_heldGrenade.GetComponent<Rigidbody>().velocity += transform.forward * m_grenadeThrowVelocity;
+            m_heldGrenade.GetComponent<Rigidbody>().velocity += (transform.forward * m_grenadeOutwardsVelocity) + (transform.up * m_grenadeUpwardsVelocity);
             // decrement grenade count
             m_nGrenadeCount--;
             // disable grenade on UI
-            m_grenadeUIs[m_nGrenadeCount].SetActive(false);
+            m_grenadeImages[m_nGrenadeCount].SetActive(false);
             // allow shooting again
             m_crosshair.SetActive(true);
-            m_muzzleFlash.SetActive(true);
             m_bHoldingGrenade = false;
             // disable kinematic state
             m_heldGrenade.GetComponent<Rigidbody>().isKinematic = false;
@@ -193,9 +205,28 @@ public class PlayerController : MonoBehaviour
     {
         // decrement lives
         m_nLives--;
+        // turn alive image to dead image
+        m_lifeImages[m_nLives].GetComponent<RawImage>().texture = m_deadTexture;
         // if dead
         if (m_nLives == 0)
             return;
+    }
+
+    /*  @brief Adds a number of lives to the player's current life count
+        @param The number of lives to add to the player's life count
+    */
+    public void AddLives(int nLives)
+    {
+        for (int i = 0; i < nLives; ++i)
+        {
+            // don't add life if at max life count
+            if (m_nLives == m_startingLivesCount)
+                break;
+            // enable life on UI
+            m_lifeImages[m_nLives].SetActive(true);
+            // increment lives
+            m_nLives++;
+        }
     }
 
     /*  @brief Calculates and draws the trajectory of grenade toss
@@ -229,7 +260,7 @@ public class PlayerController : MonoBehaviour
             if (m_nGrenadeCount == m_maxGrenadeCount)
                 break;
             // enable grenade on UI
-            m_grenadeUIs[m_nGrenadeCount].SetActive(true);
+            m_grenadeImages[m_nGrenadeCount].SetActive(true);
             // increment grenade count
             m_nGrenadeCount++;
         }

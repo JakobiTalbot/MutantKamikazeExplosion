@@ -9,7 +9,10 @@ public class MovementController : MonoBehaviour
     // speed to move between points
     public float m_moveSpeed = 1f;
     public float m_rotateSpeed = 1f;
+    // the number of grenades to give the player once they've completed a loop
     public int m_grenadesToAddOnLoop = 1;
+    // the number of lives to give the player once they've completed a loop
+    public int m_livesToAddOnLoop = 1;
 
     // float for storing current normalised distance between 2 points
     private float m_fPosLerpTime = 0f;
@@ -21,9 +24,13 @@ public class MovementController : MonoBehaviour
     private int m_iCurrentPoint = 0;
     // stores a reference to the enemy spawner
     private EnemySpawner m_enemySpawner;
+    // reference to PlayerController
+    private PlayerController m_playerController;
 
     private void Awake()
     {
+        // get reference to player controller
+        m_playerController = Camera.main.GetComponent<PlayerController>();
         // find enemy spawner
         m_enemySpawner = GameObject.FindGameObjectWithTag("EnemySpawner").GetComponent<EnemySpawner>();
         // set starting position and rotation
@@ -93,7 +100,9 @@ public class MovementController : MonoBehaviour
             // increment wave count each loop
             m_enemySpawner.IncrementWavesToSpawn();
             // give player grenades when looping
-            Camera.main.GetComponent<PlayerController>().AddGrenades(m_grenadesToAddOnLoop);
+            m_playerController.AddGrenades(m_grenadesToAddOnLoop);
+            // give player lives when looping
+            m_playerController.AddLives(m_livesToAddOnLoop);
         }
         else
             m_iCurrentPoint++;
