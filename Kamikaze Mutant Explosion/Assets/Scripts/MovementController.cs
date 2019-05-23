@@ -85,7 +85,11 @@ public class MovementController : MonoBehaviour
     {
         // if at end of array, move to first point, otherwise move to next point
         if (m_iCurrentPoint == m_points.Length - 1)
+        {
             m_iCurrentPoint = 0;
+            // increment wave count each loop
+            m_enemySpawner.IncrementWavesToSpawn();
+        }
         else
             m_iCurrentPoint++;
         // reset lerp time

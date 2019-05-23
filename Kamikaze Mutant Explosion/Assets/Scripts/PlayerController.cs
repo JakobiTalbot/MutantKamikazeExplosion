@@ -17,8 +17,7 @@ public class PlayerController : MonoBehaviour
     // amount to move the camera by if rotating camera
     public float m_cameraRotationCoefficient = 5f;
 
-    [HideInInspector]
-    public bool m_bRotateCamera = true;
+    // rotation based off camera movement to be added to base rotation
     [HideInInspector]
     public Vector3 m_v3AddedRotation;
 
@@ -28,13 +27,14 @@ public class PlayerController : MonoBehaviour
     private float m_fMuzzleFlashTimer = 0f;
     // timer to count until the player can shoot again
     private float m_fShootTimer = 0f;
-
+    // the last position of the crosshair
     private Vector3 m_v3LastCrosshairPos;
 
     void Awake()
     {
         // set cursor to crosshair
         Cursor.lockState = CursorLockMode.Locked;
+        // initialise last crosshair position
         m_v3LastCrosshairPos = m_crosshair.transform.position;
     }
 
@@ -54,16 +54,14 @@ public class PlayerController : MonoBehaviour
         // set crosshair position
         m_crosshair.transform.position = v3NewPos;
 
-        // rotate camera if bool enabled
-        if (true)
-        {
-            m_v3AddedRotation.x -= (m_crosshair.transform.position.y - m_v3LastCrosshairPos.y) * m_cameraRotationCoefficient * Time.deltaTime;
-            m_v3AddedRotation.y += (m_crosshair.transform.position.x - m_v3LastCrosshairPos.x) * m_cameraRotationCoefficient * Time.deltaTime;
-            Vector3 rot;
-            rot = m_v3AddedRotation + GetComponent<MovementController>().GetCurrentPoint().transform.rotation.eulerAngles;
-            if (!GetComponent<MovementController>().m_bMovingPoints)
-                transform.localRotation = Quaternion.Euler(rot);
-        }
+        // rotate camera
+        m_v3AddedRotation.x -= (m_crosshair.transform.position.y - m_v3LastCrosshairPos.y) * m_cameraRotationCoefficient * Time.deltaTime;
+        m_v3AddedRotation.y += (m_crosshair.transform.position.x - m_v3LastCrosshairPos.x) * m_cameraRotationCoefficient * Time.deltaTime;
+        Vector3 rot;
+        rot = m_v3AddedRotation + GetComponent<MovementController>().GetCurrentPoint().transform.rotation.eulerAngles;
+        if (!GetComponent<MovementController>().m_bMovingPoints)
+            transform.localRotation = Quaternion.Euler(rot);
+
         // set last crosshair position
         m_v3LastCrosshairPos = m_crosshair.transform.position;
         // disable muzzle flash if still active and timer has expired

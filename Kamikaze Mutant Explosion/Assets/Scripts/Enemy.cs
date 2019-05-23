@@ -47,6 +47,8 @@ public class Enemy : MonoBehaviour
         {
             // get reference to score manager
             ScoreManager manager = GameObject.FindGameObjectWithTag("ScoreManager").GetComponent<ScoreManager>();
+            // set multiplier timer
+            manager.SetMultiplierTimer();
             // add score
             manager.AddScore(m_scoreValue);
             // increment score multiplier
