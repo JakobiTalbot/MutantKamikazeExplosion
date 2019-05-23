@@ -54,7 +54,7 @@ public class Enemy : MonoBehaviour
         m_nHealth -= nDamage;
         // play enemy hit sound
         m_audioSource.PlayOneShot(m_hitAudioClips[Random.Range(0, m_hitAudioClips.Length)]);
-        m_audioSource.PlayOneShot(m_ambientAudioClips[Random.Range(0, m_ambientAudioClips.Length)]);
+        m_audioSource.PlayOneShot(m_gruntAudioClips[Random.Range(0, m_gruntAudioClips.Length)]);
         // check if dead
         if (m_nHealth <= 0)
         {
