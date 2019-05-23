@@ -208,8 +208,11 @@ public class PlayerController : MonoBehaviour
         // turn alive image to dead image
         m_lifeImages[m_nLives].GetComponent<RawImage>().texture = m_deadTexture;
         // if dead
-        if (m_nLives == 0)
+        if (m_nLives <= 0)
+        {
+            m_nLives = 0;
             return;
+        }
     }
 
     /*  @brief Adds a number of lives to the player's current life count
