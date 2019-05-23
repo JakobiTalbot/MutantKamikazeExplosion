@@ -47,7 +47,7 @@ public class ScoreManager : MonoBehaviour
         // set multiplier to parameter
         m_nScoreMulti = nMultiplier;
         // sets multiplier text to new multiplier
-        m_multiplierText.text = m_nScoreMulti.ToString();
+        m_multiplierText.text = "X" +  m_nScoreMulti.ToString();
     }
 
     /*  @brief Increments the multiplier value by one
@@ -57,7 +57,7 @@ public class ScoreManager : MonoBehaviour
         // increment multiplier value
         m_nScoreMulti++;
         // sets multiplier text to new multiplier value
-        m_multiplierText.text = m_nScoreMulti.ToString();
+        m_multiplierText.text = "X" + m_nScoreMulti.ToString();
     }
 
     /*  @brief Sets the score multiplier timer to the time required to reset timer
@@ -68,4 +68,6 @@ public class ScoreManager : MonoBehaviour
         // set timer
         m_fResetMultiTimer = m_timeToResetMultiplier;
     }
+
+    public int GetMultiplier() => m_nScoreMulti;
 }

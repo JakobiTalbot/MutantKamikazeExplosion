@@ -50,7 +50,7 @@ public class Enemy : MonoBehaviour
             // set multiplier timer
             manager.SetMultiplierTimer();
             // add score
-            manager.AddScore(m_scoreValue);
+            manager.AddScore(m_scoreValue * manager.GetMultiplier());
             // increment score multiplier
             manager.IncrementMultiplier();
             // remove enemy

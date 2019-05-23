@@ -27,7 +27,8 @@ public class EnemySpawner : MonoBehaviour
     // stores a reference the the movement controller
     private MovementController m_movementController;
     // stores the count of waves spawned
-    private int m_nWavesSpawned = 0;
+    [HideInInspector]
+    public int m_nWavesSpawned = 0;
 
     private void Awake()
     {
@@ -45,6 +46,7 @@ public class EnemySpawner : MonoBehaviour
         for (int i = 0; i < m_nWavesToSpawn; ++i)
         {
             Invoke("InstantiateEnemies", m_timeBetweenWavesSpawning * i);
+            m_nWavesSpawned++;
         }
     }
 
@@ -59,7 +61,6 @@ public class EnemySpawner : MonoBehaviour
             Instantiate(m_enemyTypes[Random.Range(0, m_enemyTypes.Length)], spawnPoint.transform.position, spawnPoint.transform.rotation);
             m_nEnemyCount++;
         }
-        m_nWavesSpawned++;
     }
 
     /*  @brief Increments the waves to be spawn for each point by 1
@@ -76,6 +77,8 @@ public class EnemySpawner : MonoBehaviour
     {
         // decrement enemy count
         m_nEnemyCount--;
+        //Debug.Log(m_nEnemyCount);
+        Debug.Log(m_nWavesToSpawn);
         // checks if enemy count is 0 and all waves have been spawned
         if (m_nEnemyCount <= 0
             && m_nWavesSpawned == m_nWavesToSpawn)
