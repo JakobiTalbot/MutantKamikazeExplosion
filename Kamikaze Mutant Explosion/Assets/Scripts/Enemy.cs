@@ -21,6 +21,7 @@ public class Enemy : MonoBehaviour
     public int m_droppedGrenadeDamage = 1;
     public float m_droppedGrenadeExplosionRadius = 1f;
     public float m_droppedGrenadeTimer = 1f;
+    public float m_droppedGrenadeExplosionScale = 1f;
 
     // stores a reference to the NavMeshAgent on the enemy GameObject
     private NavMeshAgent m_agent;
@@ -70,6 +71,7 @@ public class Enemy : MonoBehaviour
             grenade.m_explodeRadius = m_droppedGrenadeExplosionRadius;
             grenade.m_explosionDamage = m_droppedGrenadeDamage;
             grenade.m_timeToExplode = m_droppedGrenadeTimer;
+            grenade.m_explosionParticle.transform.localScale = new Vector3(m_droppedGrenadeExplosionScale, m_droppedGrenadeExplosionScale, m_droppedGrenadeExplosionScale);
             // set grenade to thrown
             grenade.m_bThrown = true;
             // get reference to score manager
@@ -83,7 +85,7 @@ public class Enemy : MonoBehaviour
             // remove enemy
             GameObject.FindGameObjectWithTag("EnemySpawner").GetComponent<EnemySpawner>().RemoveEnemy();
             // disable (still plays audio clip)
-            GetComponent<Renderer>().enabled = false;
+            GetComponentInChildren<Renderer>().enabled = false;
             GetComponent<Collider>().enabled = false;
             Destroy(gameObject, 5); // destroy after 5 seconds
         }
