@@ -23,7 +23,7 @@ public class Enemy : MonoBehaviour
     public float m_droppedGrenadeTimer = 1f;
     public float m_droppedGrenadeExplosionScale = 1f;
     // how long to wait when reached the player until exploding
-    public float m_timeToWaitBeforeExploding = 1f;
+    public float m_timeToWaitBeforeExploding = 5f;
     // how much damage to deal when exploding on player
     public int m_damageDealtToPlayer = 1;
 
@@ -35,6 +35,8 @@ public class Enemy : MonoBehaviour
     private ScoreManager m_scoreManager;
     // stores the current health of the enemy
     private int m_nHealth;
+    // stores the current value for the colour lerping
+    private float m_fColourLerp = 0f;
 
     void Awake()
     {
@@ -53,6 +55,15 @@ public class Enemy : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        // if going to explode, slowly turn red
+        if (!GetComponent<Animator>().enabled)
+        {
+            // turn red
+            GetComponentInChildren<Renderer>().material.color = new Color(Mathf.Lerp(0f, 1f, m_fColourLerp), 0, 0);
+            // count up on lerp
+            m_fColourLerp += Time.deltaTime / m_timeToWaitBeforeExploding;
+        }
+
         // don't update if nav mesh agent is disabled
         if (!m_agent.enabled)
             return;
