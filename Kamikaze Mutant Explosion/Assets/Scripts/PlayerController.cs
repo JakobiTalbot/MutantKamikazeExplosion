@@ -154,7 +154,9 @@ public class PlayerController : MonoBehaviour
             // play gunshot sound
             m_audioSource.PlayOneShot(m_audioSource.clip);
             // create particles
-            Destroy(Instantiate(m_muzzleFlashParticle, m_muzzleFlashSpawnPoint.transform), 5f);
+            GameObject muzzleFlash = Instantiate(m_muzzleFlashParticle, m_muzzleFlashSpawnPoint.transform.position, m_muzzleFlashSpawnPoint.transform.rotation);
+            muzzleFlash.transform.parent = m_muzzleFlashSpawnPoint.transform;
+            Destroy(muzzleFlash, 5f);
 
             // create raycast hit data
             RaycastHit hit = new RaycastHit();
