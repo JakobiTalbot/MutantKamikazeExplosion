@@ -50,6 +50,9 @@ public class ScoreManager : MonoBehaviour
         m_nCurrentScore += nScore * m_nScoreMulti;
         // sets score text to new score
         m_scoreText.text = m_nCurrentScore.ToString();
+        // update highscore number if new highscore
+        if (m_nCurrentScore > LoadHighscore())
+            m_highscoreText.text = m_nCurrentScore.ToString();
     }
 
     /*  @brief Sets the multiplier to a new value
