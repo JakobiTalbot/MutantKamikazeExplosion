@@ -45,6 +45,10 @@ public class PlayerController : MonoBehaviour
     public Sprite m_deadTexture;
     // the parent object of the display shown when the player dies
     public GameObject m_gameOverDisplay;
+    // the particle to be displayed when an enemy is shot
+    public GameObject m_hitEnemyParticle;
+    // reference to the gun GameObject
+    public GameObject m_gun;
 
     // rotation based off camera movement to be added to base rotation
     [HideInInspector]
@@ -145,7 +149,9 @@ public class PlayerController : MonoBehaviour
             if (Physics.Raycast(Camera.main.ScreenPointToRay(m_crosshair.transform.position), out hit)
                 && hit.collider.CompareTag("Enemy"))
             {
+                // damage enemy
                 hit.collider.GetComponent<Enemy>().TakeDamage(m_bulletDamage);
+                Destroy(Instantiate(m_hitEnemyParticle, hit.point, Quaternion.Euler(Vector3.zero)), 5f);
             }
 
             // set shoot timer
@@ -156,6 +162,9 @@ public class PlayerController : MonoBehaviour
         Ray ray = Camera.main.ScreenPointToRay(m_crosshair.transform.position);
         Vector3 v3GrenadeStartPos = ray.origin + (ray.direction * 1f);
         Vector3 v3GrenadeVelocity = ((v3GrenadeStartPos - Camera.main.transform.position) * m_grenadeOutwardsVelocity) + new Vector3(0, m_grenadeUpwardsVelocity, 0);
+
+        Vector3 v3NewGunRot = new Vector3(0, (m_crosshair.transform.position.y - Screen.height / 2f) * 0.001f, (m_crosshair.transform.position.y - Screen.height / 2f) * 0.001f);
+        //m_gun.transform.rotation = Quaternion.LookRotation(v3NewGunRot);
         if (m_bHoldingGrenade)
         {
             // set new grenade position
@@ -213,8 +222,12 @@ public class PlayerController : MonoBehaviour
         if (m_nLives <= 0)
         {
             m_nLives = 0;
+            // unlock mouse
+            Cursor.lockState = CursorLockMode.None;
             // enable game over display
             m_gameOverDisplay.SetActive(true);
+            // pause time
+            Time.timeScale = 0f;
             // set score text
             m_gameOverDisplay.GetComponent<GameOver>().m_scoreText.text = FindObjectOfType<ScoreManager>().m_scoreText.text;
         }
