@@ -43,7 +43,7 @@ public class ScoreManager : MonoBehaviour
     public void AddScore(int nScore)
     {
         // increases score by parameter amount
-        m_nCurrentScore += nScore;
+        m_nCurrentScore += nScore * m_nScoreMulti;
         // sets score text to new score
         m_scoreText.text = m_nCurrentScore.ToString();
     }

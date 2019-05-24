@@ -40,9 +40,9 @@ public class PlayerController : MonoBehaviour
     // stores a reference to the lives on the UI
     public GameObject[] m_lifeImages;
     // the texture to be applied to the life image when it hasn't been taken yet
-    public Texture2D m_aliveTexture;
+    public Sprite m_aliveTexture;
     // the texture to be applied to the life image when it has been taken
-    public Texture2D m_deadTexture;
+    public Sprite m_deadTexture;
 
     // rotation based off camera movement to be added to base rotation
     [HideInInspector]
@@ -153,12 +153,13 @@ public class PlayerController : MonoBehaviour
         // get direction for grenade to be thrown using raycast
         Ray ray = Camera.main.ScreenPointToRay(m_crosshair.transform.position);
         Vector3 v3GrenadeStartPos = ray.origin + (ray.direction * 1f);
+        Vector3 v3GrenadeVelocity = ((v3GrenadeStartPos - Camera.main.transform.position) * m_grenadeOutwardsVelocity) + new Vector3(0, m_grenadeUpwardsVelocity, 0);
         if (m_bHoldingGrenade)
         {
             // set new grenade position
             m_heldGrenade.transform.position = v3GrenadeStartPos;
             // calculate and draw trajectory line
-            UpdateTrajectory(v3GrenadeStartPos, (transform.forward * m_grenadeOutwardsVelocity) + (transform.up * m_grenadeUpwardsVelocity));
+            UpdateTrajectory(v3GrenadeStartPos, v3GrenadeVelocity);
         }
 
         // throw grenade if right mouse button clicked and we have a grenade available
@@ -182,7 +183,7 @@ public class PlayerController : MonoBehaviour
             && m_nGrenadeCount > 0)
         {
             // add velocity to grenade
-            m_heldGrenade.GetComponent<Rigidbody>().velocity += (transform.forward * m_grenadeOutwardsVelocity) + (transform.up * m_grenadeUpwardsVelocity);
+            m_heldGrenade.GetComponent<Rigidbody>().velocity += v3GrenadeVelocity;
             // decrement grenade count
             m_nGrenadeCount--;
             // disable grenade on UI
@@ -201,18 +202,18 @@ public class PlayerController : MonoBehaviour
 
     /* @brief Takes damage and dies if the player has no more lives
     */
-    public void TakeDamage()
+    public void TakeDamage(int nDamage = 1)
     {
         // decrement lives
         m_nLives--;
-        // turn alive image to dead image
-        m_lifeImages[m_nLives].GetComponent<RawImage>().texture = m_deadTexture;
         // if dead
         if (m_nLives <= 0)
         {
             m_nLives = 0;
-            return;
+            // die
         }
+        // turn alive image to dead image
+        m_lifeImages[m_nLives].GetComponent<Image>().sprite = m_deadTexture;
     }
 
     /*  @brief Adds a number of lives to the player's current life count
