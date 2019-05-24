@@ -6,9 +6,12 @@ ModelImporter:
     100000: //RootNode
     400000: //RootNode
     2100000: lambert1
+    2100002: GUN_body
+    2100004: Glass
     2300000: //RootNode
     3300000: //RootNode
     4300000: Player_Weapon
+    4300002: Gun_Mesh
     2186277476908879412: ImportLogs
   externalObjects: {}
   materials:

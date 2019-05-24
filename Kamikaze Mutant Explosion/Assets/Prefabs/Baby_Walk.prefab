@@ -1523,7 +1523,7 @@ MonoBehaviour:
   - {fileID: 8300000, guid: f4d52a4a57271754487ad85731e8ef63, type: 3}
   - {fileID: 8300000, guid: fdcf4907d90a318489281d70180db0cb, type: 3}
   - {fileID: 8300000, guid: 194a92c7547c6844495f3ba6b1fb8d68, type: 3}
-  m_grenade: {fileID: 2159568765191329834, guid: 4a0bb881183d1b146a27e90e7d5e0193,
+  m_grenade: {fileID: 2159568765191329834, guid: 48a71d94ad860854485fd0b145c483a6,
     type: 3}
   m_droppedGrenadeDamage: 2
   m_droppedGrenadeExplosionRadius: 2
