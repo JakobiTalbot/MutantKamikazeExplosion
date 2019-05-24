@@ -43,6 +43,8 @@ public class PlayerController : MonoBehaviour
     public Sprite m_aliveTexture;
     // the texture to be applied to the life image when it has been taken
     public Sprite m_deadTexture;
+    // reference to the parent of the in game display
+    public GameObject m_gameCanvas;
     // the parent object of the display shown when the player dies
     public GameObject m_gameOverDisplay;
     // the particle to be displayed when an enemy is shot
@@ -239,6 +241,8 @@ public class PlayerController : MonoBehaviour
             Cursor.lockState = CursorLockMode.None;
             // enable game over display
             m_gameOverDisplay.SetActive(true);
+            // disable in game canvas
+            m_gameCanvas.SetActive(false);
             // pause time
             Time.timeScale = 0f;
             // call function to display score / set new highscore
