@@ -248,9 +248,11 @@ public class PlayerController : MonoBehaviour
             // call function to display score / set new highscore
             FindObjectOfType<GameOver>().Display(FindObjectOfType<ScoreManager>().GetScore());
         }
-
-        // turn alive image to dead image
-        m_lifeImages[m_nLives].GetComponent<Image>().sprite = m_deadTexture;
+        else
+        {
+            // turn alive image to dead image
+            m_lifeImages[m_nLives].GetComponent<Image>().sprite = m_deadTexture;
+        }
     }
 
     /*  @brief Adds a number of lives to the player's current life count

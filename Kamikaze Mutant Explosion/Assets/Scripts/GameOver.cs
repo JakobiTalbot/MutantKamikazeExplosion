@@ -16,6 +16,7 @@ public class GameOver : MonoBehaviour
     public void Display(int nScore)
     {
         ScoreManager manager = FindObjectOfType<ScoreManager>();
+        m_scoreText.text = nScore.ToString();
         // if we beat the highscore record
         if (nScore > manager.LoadHighscore())
         {

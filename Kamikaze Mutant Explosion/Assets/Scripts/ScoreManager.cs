@@ -86,8 +86,14 @@ public class ScoreManager : MonoBehaviour
     }
 
     // basic getters
-    public int GetMultiplier() => m_nScoreMulti;
-    public int GetScore() => m_nCurrentScore;
+    public int GetMultiplier()
+    {
+        return m_nScoreMulti;
+    }
+    public int GetScore()
+    {
+        return m_nCurrentScore;
+    }
 
     /*  @brief Gets the highscore player preference and returns it
         @return The player's highscore
