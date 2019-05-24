@@ -43,6 +43,8 @@ public class PlayerController : MonoBehaviour
     public Sprite m_aliveTexture;
     // the texture to be applied to the life image when it has been taken
     public Sprite m_deadTexture;
+    // the parent object of the display shown when the player dies
+    public GameObject m_gameOverDisplay;
 
     // rotation based off camera movement to be added to base rotation
     [HideInInspector]
@@ -201,6 +203,7 @@ public class PlayerController : MonoBehaviour
     }
 
     /* @brief Takes damage and dies if the player has no more lives
+        @param The damage amount to be taken
     */
     public void TakeDamage(int nDamage = 1)
     {
@@ -210,8 +213,12 @@ public class PlayerController : MonoBehaviour
         if (m_nLives <= 0)
         {
             m_nLives = 0;
-            // die
+            // enable game over display
+            m_gameOverDisplay.SetActive(true);
+            // set score text
+            m_gameOverDisplay.GetComponent<GameOver>().m_scoreText.text = FindObjectOfType<ScoreManager>().m_scoreText.text;
         }
+
         // turn alive image to dead image
         m_lifeImages[m_nLives].GetComponent<Image>().sprite = m_deadTexture;
     }

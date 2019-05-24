@@ -39,7 +39,7 @@ public class Enemy : MonoBehaviour
     void Awake()
     {
         // get reference to score manager
-        m_scoreManager = GameObject.FindGameObjectWithTag("ScoreManager").GetComponent<ScoreManager>();
+        m_scoreManager = FindObjectOfType<ScoreManager>().GetComponent<ScoreManager>();
         // get reference to audio source
         m_audioSource = GetComponent<AudioSource>();
         // initialise health
