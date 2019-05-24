@@ -7,6 +7,8 @@ public class ScoreManager : MonoBehaviour
 {
     // stores a reference to the text on the UI which displays the player's score
     public Text m_scoreText;
+    // stores a reference to the text on the UI which displays the highscore
+    public Text m_highscoreText;
     // stores a reference to the text on the UI which displays the player's score multiplier
     public Text m_multiplierText;
     // time before multiplier is reset to 1
@@ -25,6 +27,8 @@ public class ScoreManager : MonoBehaviour
     {
         // get reference to movement controller
         m_movementController = Camera.main.GetComponent<MovementController>();
+        // sets text to highscore
+        m_highscoreText.text = LoadHighscore().ToString();
     }
 
     private void Update()
