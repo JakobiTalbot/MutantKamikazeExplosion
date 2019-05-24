@@ -1519,6 +1519,7 @@ MonoBehaviour:
   m_gruntAudioClips:
   - {fileID: 8300000, guid: ff184d551becfbd43be05be2a02ba6d6, type: 3}
   - {fileID: 8300000, guid: 3fe9f36a605b24941b299d97b6f6ff5c, type: 3}
+  - {fileID: 8300000, guid: 80af3395e9b1f724db574eb47b61ab01, type: 3}
   m_hitAudioClips:
   - {fileID: 8300000, guid: f4d52a4a57271754487ad85731e8ef63, type: 3}
   - {fileID: 8300000, guid: fdcf4907d90a318489281d70180db0cb, type: 3}
@@ -1529,6 +1530,8 @@ MonoBehaviour:
   m_droppedGrenadeExplosionRadius: 2
   m_droppedGrenadeTimer: 1
   m_droppedGrenadeExplosionScale: 1
+  m_timeToWaitBeforeExploding: 1
+  m_damageDealtToPlayer: 1
 --- !u!195 &7183662024656657047
 NavMeshAgent:
   m_ObjectHideFlags: 0
