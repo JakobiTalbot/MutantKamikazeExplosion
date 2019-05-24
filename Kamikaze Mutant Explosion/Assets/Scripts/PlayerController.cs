@@ -49,7 +49,12 @@ public class PlayerController : MonoBehaviour
     public GameObject m_hitEnemyParticle;
     // reference to the gun GameObject
     public GameObject m_gun;
-    public float m_gunRotationCoefficient = 0.01f;
+    // multiply the gun rotation by this amount
+    public float m_gunRotationCoefficient = 0.05f;
+    // the particle to spawn from gun when firing
+    public GameObject m_muzzleFlashParticle;
+    // the barrel of the gun to spawn muzzle flashes at
+    public GameObject m_muzzleFlashSpawnPoint;
 
     // rotation based off camera movement to be added to base rotation
     [HideInInspector]
@@ -143,11 +148,13 @@ public class PlayerController : MonoBehaviour
             m_muzzleFlash.SetActive(true);
             m_muzzleFlash.transform.Rotate(new Vector3(0, 0, Random.Range(0f, 360f)));
             m_fMuzzleFlashTimer = m_muzzleFlashTime;
-
+            
             // set random weapon pitch
             m_audioSource.pitch = Random.Range(m_minMaxPitchRange.x, m_minMaxPitchRange.y);
             // play gunshot sound
             m_audioSource.PlayOneShot(m_audioSource.clip);
+            // create particles
+            Destroy(Instantiate(m_muzzleFlashParticle, m_muzzleFlashSpawnPoint.transform), 5f);
 
             // create raycast hit data
             RaycastHit hit = new RaycastHit();
