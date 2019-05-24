@@ -49,6 +49,7 @@ public class PlayerController : MonoBehaviour
     public GameObject m_hitEnemyParticle;
     // reference to the gun GameObject
     public GameObject m_gun;
+    public float m_gunRotationCoefficient = 0.01f;
 
     // rotation based off camera movement to be added to base rotation
     [HideInInspector]
@@ -117,6 +118,12 @@ public class PlayerController : MonoBehaviour
         if (!GetComponent<MovementController>().m_bMovingPoints)
             transform.localRotation = Quaternion.Euler(rot);
 
+        // rotate gun
+        Vector3 v3NewGunRot = m_gun.transform.localRotation.eulerAngles;
+        v3NewGunRot.z += (m_crosshair.transform.position.y - m_v3LastCrosshairPos.y) * m_gunRotationCoefficient;
+        v3NewGunRot.y += (m_crosshair.transform.position.x - m_v3LastCrosshairPos.x) * m_gunRotationCoefficient;
+        m_gun.transform.localRotation = Quaternion.Euler(v3NewGunRot);
+
         // set last crosshair position
         m_v3LastCrosshairPos = m_crosshair.transform.position;
         // disable muzzle flash if still active and timer has expired
@@ -162,9 +169,6 @@ public class PlayerController : MonoBehaviour
         Ray ray = Camera.main.ScreenPointToRay(m_crosshair.transform.position);
         Vector3 v3GrenadeStartPos = ray.origin + (ray.direction * 1f);
         Vector3 v3GrenadeVelocity = ((v3GrenadeStartPos - Camera.main.transform.position) * m_grenadeOutwardsVelocity) + new Vector3(0, m_grenadeUpwardsVelocity, 0);
-
-        Vector3 v3NewGunRot = new Vector3(0, (m_crosshair.transform.position.y - Screen.height / 2f) * 0.001f, (m_crosshair.transform.position.y - Screen.height / 2f) * 0.001f);
-        //m_gun.transform.rotation = Quaternion.LookRotation(v3NewGunRot);
         if (m_bHoldingGrenade)
         {
             // set new grenade position
