@@ -78,5 +78,23 @@ public class ScoreManager : MonoBehaviour
         m_fResetMultiTimer = m_timeToResetMultiplier;
     }
 
+    // basic getters
     public int GetMultiplier() => m_nScoreMulti;
+    public int GetScore() => m_nCurrentScore;
+
+    /*  @brief Gets the highscore player preference and returns it
+        @return The player's highscore
+    */
+    public int LoadHighscore()
+    {
+        return PlayerPrefs.GetInt("highscore", 0);
+    }
+
+    /*  @brief Saves the parameter as a new highscore
+        @param The new highscore to be saved
+    */
+    public void SaveHighscore(int nScore)
+    {
+        PlayerPrefs.SetInt("highscore", nScore);
+    }
 }

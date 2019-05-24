@@ -241,8 +241,8 @@ public class PlayerController : MonoBehaviour
             m_gameOverDisplay.SetActive(true);
             // pause time
             Time.timeScale = 0f;
-            // set score text
-            m_gameOverDisplay.GetComponent<GameOver>().m_scoreText.text = FindObjectOfType<ScoreManager>().m_scoreText.text;
+            // call function to display score / set new highscore
+            FindObjectOfType<GameOver>().Display(FindObjectOfType<ScoreManager>().GetScore());
         }
 
         // turn alive image to dead image
