@@ -13,6 +13,7 @@ public class GameOver : MonoBehaviour
     */
     public void Retry()
     {
+        Time.timeScale = 1f;
         SceneManager.LoadScene(1);
     }
 
@@ -20,6 +21,7 @@ public class GameOver : MonoBehaviour
     */
     public void MainMenu()
     {
+        Time.timeScale = 1f;
         SceneManager.LoadScene(0);
     }
 
