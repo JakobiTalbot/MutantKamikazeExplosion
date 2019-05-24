@@ -59,7 +59,10 @@ public class Enemy : MonoBehaviour
         if (!GetComponent<Animator>().enabled)
         {
             // turn red
-            GetComponentInChildren<Renderer>().material.color = new Color(Mathf.Lerp(0f, 1f, m_fColourLerp), 0, 0);
+            foreach (Renderer renderer in GetComponentsInChildren<Renderer>())
+            {
+                renderer.material.color = new Color(Mathf.Lerp(0f, 1f, m_fColourLerp), 0, 0);
+            }
             // count up on lerp
             m_fColourLerp += Time.deltaTime / m_timeToWaitBeforeExploding;
         }
